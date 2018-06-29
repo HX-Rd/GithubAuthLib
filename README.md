@@ -1,4 +1,4 @@
-# GithubAuthLibApp
+# GithubAuthLib
 
 Github Authentication library for Angular 6
 
