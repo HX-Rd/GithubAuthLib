@@ -33,7 +33,7 @@ import { AppComponent } from './app.component';
 import { SuccessComponent } from './success/success.component';
 
 import { GithubAuthLibModule } from 'github-auth-lib';
-import { GighubAuthService } from 'github-auth-lib';
+import { GithubAuthService } from 'github-auth-lib';
 import { OAuthService } from 'angular-oauth2-oidc';
 
 @NgModule({
