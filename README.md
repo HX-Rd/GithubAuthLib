@@ -65,19 +65,29 @@ export class AppModule { }
 Lets go over the config variables
 
 ### clientId
+*Required*    
 This is your google clientId. You can create an app here [Github Apis](https://developer.github.com/apps/building-github-apps/creating-a-github-app/) and there is a lot of documentation online if you run into trouble.
 
 ### codeRedirectUrl
+*Required*    
 Since github only allows code flow login, you need to provide a server endpoint where you send your code to. This means that you will have to set up a server your self to handle this and have your client secret stored there. Luckily this is really easy to do thanks to this repository here [Gatekeeper](https://github.com/prose/gatekeeper). If you have an azure account or an heroku account this is just a one button install. If not, there are some instructions on how to set this up in the repo. For further details go to the gatekeeper repo.
 
 ### redirectUrl
+*Required*    
 Where your token is redirected from github, you will have to setup this redirect url on your app. You do that under your github account -> go to settings -> go to developer settings -> select your app and setup your callback. This is also where you get your clientId and clientSecret. The base address should be your app host ( localhost:4200 usually when deving ) and the endpoint to where the token is recived. In the example we use `authcallback`, this value does not matter so much sine the library takes care of registering this route for you and hooks upp the `LoginComnent` for you on that route. Just make sure that the route is registered on the github app.
 
 ### redirectAfterLogin
+*Required*    
 Where you want the application to redirect after a successfull login. In the example we are using the value `/success` but you should point it to a route where you want to redirect to. The path value is relative and should start with a forward slash.
 
 ### redirectAfterLogout
+*Required*      
 This is much like the `redirectAfterLogin` only for when we logout.
+
+### scopes
+*Optional*   
+*Default is an array with one value 'user'*   
+This is an array of scopes to request when doing the login. For full list of supported scope values take a look at githubs documentation [Github scopes](https://developer.github.com/apps/building-oauth-apps/understanding-scopes-for-oauth-apps/)
 
 ## Seting up the login link
 Here is an example on how to setup a navbar with the login link ( we will just use app.component here in this example )
