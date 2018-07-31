@@ -13,8 +13,7 @@ export class SuccessComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let token = this.githubAuth.getAccessToken();
-    let x = 5;
+    console.log(this.githubAuth.getUserInfo());
   }
 
 }

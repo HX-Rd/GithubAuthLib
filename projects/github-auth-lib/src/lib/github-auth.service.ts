@@ -6,6 +6,8 @@ import { IClientConfig } from './client-config.interface';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthConfig } from 'angular-oauth2-oidc';
+import { User } from './models/user.model';
+import { CallbackComponent } from './callback/callback.component';
 
 @Injectable()
 export class StorageBrige implements Storage {
@@ -57,16 +59,15 @@ export class LocalStorageBrigeInjector {
 }
 
 @Injectable()
-export class OAuthInjector {
-    private static instance: OAuthService = null;
+export class GithubAuthInjector {
+    private static instance: GithubAuthService = null;
 
-    // Return the instance of the service
-    public static getInstance(config: IClientConfig, router: Router, ngZone: NgZone, httpClient: HttpClient, storageBrige: StorageBrige, validationHandler: ValidationHandler, urlHelperService: UrlHelperService): OAuthService {
-        if (OAuthInjector.instance === null) {
+    public static getInstance(config: IClientConfig, router: Router, ngZone: NgZone, httpClient: HttpClient, storageBrige: StorageBrige, validationHandler: ValidationHandler, urlHelperService: UrlHelperService): GithubAuthService {
+        if (GithubAuthInjector.instance === null) {
             router.config.push(
                 {
                     path: config.redirectUrl.split('/').pop(),
-                    component: LoginComponent
+                    component: CallbackComponent
                 }
             );
             router.resetConfig(router.config);
@@ -79,19 +80,51 @@ export class OAuthInjector {
             authConfig.redirectUri = config.redirectUrl;
             authConfig.loginUrl = 'https://github.com/login/oauth/authorize';
 
-            OAuthInjector.instance = new OAuthService(ngZone, httpClient, storageBrige, validationHandler, authConfig, urlHelperService);
+            GithubAuthInjector.instance = new GithubAuthService(ngZone, httpClient, storageBrige, validationHandler, authConfig, urlHelperService);
 
         }
-        return OAuthInjector.instance;
+        return GithubAuthInjector.instance;
     }
 }
 
 @Injectable()
-export class GithubAuthService extends OAuthService {
+export class GithubAuthService {
+  private oauthService: OAuthService;
+  constructor(
+    private ngZone: NgZone,
+    private httpClient: HttpClient,
+    private storageBrige: StorageBrige,
+    private validationHandler: ValidationHandler,
+    private authConfig: AuthConfig,
+    private urlHelperService: UrlHelperService,
+  ) {
+    this.oauthService = new OAuthService(ngZone, httpClient, storageBrige, validationHandler, authConfig, urlHelperService);
+  }
+
+  startImplicitFlow() {
+    this.oauthService.initImplicitFlow();
+  }
+
+  logOut() {
+    this.oauthService.logOut();
+    this.storageBrige.removeItem('github_user_info');
+  }
+
+  getAccessToken(): string {
+    let tokenRaw = this.oauthService.getAccessToken();
+    if(tokenRaw !== undefined) {
+      let token = tokenRaw.replace(/\"/g, '');
+      return token;
+    }
+  }
+
+  getUserInfo(): User {
+    return JSON.parse(this.storageBrige.getItem('github_user_info'));
+  }
 }
 
-export function OAuthFactory(config: IClientConfig, router: Router, ngZone: NgZone, httpClient: HttpClient, storageBrige: StorageBrige, validationHandler: ValidationHandler, urlHelperService: UrlHelperService): OAuthService {
-    return OAuthInjector.getInstance(config, router, ngZone, httpClient, storageBrige, validationHandler, urlHelperService);
+export function GithubAuthFactory(config: IClientConfig, router: Router, ngZone: NgZone, httpClient: HttpClient, storageBrige: StorageBrige, validationHandler: ValidationHandler, urlHelperService: UrlHelperService): GithubAuthService {
+    return GithubAuthInjector.getInstance(config, router, ngZone, httpClient, storageBrige, validationHandler, urlHelperService);
 }
 
 export function StorageBrigeFactory(localStorageService: LocalStorageService): StorageBrige {

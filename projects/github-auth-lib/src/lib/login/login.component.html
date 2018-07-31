@@ -1,2 +1,10 @@
-<a *ngIf="!isLoggedIn" (click)="login()">Login</a>
-<a *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+<!--<a *ngIf="!accessTokenSubject.getValue()" (click)="login()">Login</a>
+<a *ngIf="accessTokenSubject.getValue()" (click)="logout()">Logout</a>-->
+<ng-container *ngTemplateOutlet='activeTemplate'></ng-container>
+<ng-template #defaultLogin>
+  <a>Login</a>
+</ng-template>
+<ng-template #defaultLogout>
+  <a>Logout</a>
+</ng-template>
+<ng-template #defaultLoading></ng-template>

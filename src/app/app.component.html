@@ -7,7 +7,16 @@
       <ul class="nav navbar-nav">
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ga-login></li>
+        <li ga-login>
+          <ng-template #login>
+            <a>Login</a>
+          </ng-template>
+          <ng-template #logout>
+            <a>Logout</a>
+            <!--<a>Logout {{githubAuth.getUserInfo()?.login}}<span><img [src]="githubAuth.getUserInfo()?.avatar_url" height="36" width="36"></span></a>-->
+          </ng-template>
+          <ng-template #loading><i class="fa fa-spinner fa-spin" style="font-size:36px"></i></ng-template>
+        </li>
       </ul>
     </div>
   </div>

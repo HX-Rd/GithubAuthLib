@@ -10,19 +10,18 @@ import { LocalStorageModule } from 'angular-2-local-storage';
 import { LocalStorageService } from 'angular-2-local-storage';
 
 import { OAuthModule } from 'angular-oauth2-oidc';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { ValidationHandler } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc';
 import { UrlHelperService } from 'angular-oauth2-oidc';
 
-import { OAuthFactory } from './github-auth.service';
+import { GithubAuthService, GithubAuthFactory } from './github-auth.service';
 import { StorageBrigeFactory } from './github-auth.service';
 import { StorageBrige } from './github-auth.service';
 
 import { IClientConfig } from './client-config.interface';
 import { LoginComponent } from './login/login.component';
 
-import { GithubAuthService } from './github-auth.service';
+import { CallbackComponent } from './callback/callback.component';
 
 @NgModule({
   imports: [
@@ -38,16 +37,18 @@ import { GithubAuthService } from './github-auth.service';
     })
   ],
   declarations: [
-    LoginComponent
+    LoginComponent,
+    CallbackComponent
   ],
   entryComponents: [
-    LoginComponent
+    LoginComponent,
+    CallbackComponent
   ],
   exports: [
     LoginComponent,
   ]
 })
-export class GithubAuthLibModule { 
+export class GithubAuthLibModule {
   static withConfig(clientConfig: IClientConfig): ModuleWithProviders {
     return {
       ngModule: GithubAuthLibModule,
@@ -64,9 +65,8 @@ export class GithubAuthLibModule {
           useFactory: StorageBrigeFactory,
           multi: false
         },
-
-        OAuthService, {
-          provide: OAuthService,
+        {
+          provide: GithubAuthService,
           deps: [
             'CLIENT_CONFIG',
             Router,
@@ -76,10 +76,10 @@ export class GithubAuthLibModule {
             ValidationHandler,
             UrlHelperService
           ],
-          useFactory: OAuthFactory,
+          useFactory: GithubAuthFactory,
           multi: false
         },
-        { provide: GithubAuthService, useExisting: OAuthService }
+
       ]
     };
   }
