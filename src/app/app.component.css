@@ -1,0 +1,8 @@
+.loading {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 100vh;
+}

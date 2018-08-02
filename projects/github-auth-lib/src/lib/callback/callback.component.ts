@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Inject, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { User } from '../models/user.model';
 import { IClientConfig } from '../client-config.interface';
+import { LoadingViewService } from '../loading-view.service';
 
 @Component({
   selector: 'ga-callback',
@@ -17,19 +18,22 @@ export class CallbackComponent implements OnInit, AfterViewInit {
   redirectSubscription: Subscription;
   getCodeSubscription: Subscription;
   codeRedirectUrl: string;
+  loadingTemplate: TemplateRef<any>;
 
   constructor(
     @Inject('CLIENT_CONFIG') config: IClientConfig,
     private httpClient: HttpClient,
     private activatedRoute: ActivatedRoute,
     private localStorageService: LocalStorageService,
-    private router: Router
+    private router: Router,
+    private loadingViewService: LoadingViewService
   ) {
     this.redirectAfterLogin = (config.redirectAfterLogin === undefined) ? '/' : config.redirectAfterLogin;
     this.codeRedirectUrl = config.codeRedirectUrl;
    }
 
   ngOnInit() {
+    this.loadingTemplate = this.loadingViewService.loadingView;
   }
 
   ngAfterViewInit(): void {

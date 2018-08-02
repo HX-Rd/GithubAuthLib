@@ -8,6 +8,7 @@ import { LocalStorageService } from 'angular-2-local-storage';
 import { IClientConfig } from '../client-config.interface';
 import { ILocalStorageEvent } from 'angular-2-local-storage/dist/local-storage-events.interface';
 import { GithubAuthService } from '../github-auth.service';
+import { LoadingViewService } from '../loading-view.service';
 
 @Component({
   selector: '[ga-login]',
@@ -38,6 +39,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private oauthService: GithubAuthService,
     private localStorageService: LocalStorageService,
     private router: Router,
+    private loadingViewService: LoadingViewService
   ) {
     this.redirectAfterLogout = config.redirectAfterLogout;
   }
@@ -52,6 +54,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.activeLoadingContent = this.loadingContent === undefined
       ? this.defaultLoadingContent
       : this.loadingContent;
+
+    this.loadingViewService.loadingView = this.activeLoadingContent;
 
     this.accessTokenSubject = new BehaviorSubject<boolean>(this.localStorageService.get('access_token') !== null);
     this.activeTemplate = this.accessTokenSubject.getValue()
