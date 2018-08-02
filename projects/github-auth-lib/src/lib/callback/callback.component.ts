@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { User } from '../models/user.model';
 import { IClientConfig } from '../client-config.interface';
-import { LoadingViewService } from '../loading-view.service';
+import { LoadingViewService } from '../services/loading-view.service';
 
 @Component({
   selector: 'ga-callback',
@@ -38,7 +38,7 @@ export class CallbackComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.redirectSubscription = this.activatedRoute.queryParams.pipe(
-      filter((params: Params) => { console.log(params); return params['code'] !== undefined }),
+      filter((params: Params) => { return params['code'] !== undefined }),
       map((params: Params) => params['code'])
     )
     .subscribe(

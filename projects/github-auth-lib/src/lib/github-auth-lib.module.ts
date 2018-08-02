@@ -14,9 +14,10 @@ import { ValidationHandler } from 'angular-oauth2-oidc';
 import { JwksValidationHandler } from 'angular-oauth2-oidc';
 import { UrlHelperService } from 'angular-oauth2-oidc';
 
-import { GithubAuthService, GithubAuthFactory } from './github-auth.service';
-import { StorageBrigeFactory } from './github-auth.service';
-import { StorageBrige } from './github-auth.service';
+import { GithubAuthService } from './services/github-auth.service';
+import { GithubAuthFactory } from './factories/injection-factories';
+import { StorageBrigeFactory } from './factories/injection-factories';
+import { StorageBrige } from './services/storage-bridge.service';
 
 import { IClientConfig } from './client-config.interface';
 import { LoginComponent } from './login/login.component';
@@ -86,5 +87,5 @@ export class GithubAuthLibModule {
 }
 
 export { IClientConfig } from './client-config.interface';
-export { GithubAuthService } from './github-auth.service';
+export { GithubAuthService } from './services/github-auth.service';
 export { LoginComponent } from './login/login.component';

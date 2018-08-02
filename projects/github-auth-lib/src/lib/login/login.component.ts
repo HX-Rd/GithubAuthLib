@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Component, OnInit, Inject, OnDestroy, TemplateRef, ContentChild, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
@@ -7,8 +7,8 @@ import { LocalStorageService } from 'angular-2-local-storage';
 
 import { IClientConfig } from '../client-config.interface';
 import { ILocalStorageEvent } from 'angular-2-local-storage/dist/local-storage-events.interface';
-import { GithubAuthService } from '../github-auth.service';
-import { LoadingViewService } from '../loading-view.service';
+import { GithubAuthService } from '../services/github-auth.service';
+import { LoadingViewService } from '../services/loading-view.service';
 
 @Component({
   selector: '[ga-login]',
