@@ -1,15 +1,16 @@
 import { Injectable } from "@angular/core";
-import { LocalStorageService } from "angular-2-local-storage";
+import { LocalStorageService } from "ngx-store";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class StorageBrige implements Storage {
     length: number;
-    constructor(private localStorageService: LocalStorageService) {
-        this.length = localStorageService.length();
+    constructor(public localStorageService: LocalStorageService) {
+        this.length = localStorageService.keys.length;
     }
     clear(): void {
-        this.length = this.localStorageService.length();
-        this.localStorageService.clearAll();
+        this.length = this.localStorageService.keys.length;
+        this.localStorageService.clear();
     }
     getItem(key: string): string | null {
         let ret = this.localStorageService.get(key);
@@ -19,14 +20,14 @@ export class StorageBrige implements Storage {
         return null;
     }
     key(index: number): string | null {
-        return this.localStorageService.keys()[index];
+        return this.localStorageService.keys[index];
     }
     removeItem(key: string): void {
-        this.length = this.localStorageService.length();
+        this.length = this.localStorageService.keys.length;
         this.localStorageService.remove(key);
     }
     setItem(key: string, data: string): void {
-        this.length = this.localStorageService.length();
+        this.length = this.localStorageService.keys.length;
         this.localStorageService.set(key, data);
     }
     [key: string]: any;

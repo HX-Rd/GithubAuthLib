@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http";
 import { StorageBrige } from "../services/storage-bridge.service";
 import { ValidationHandler, UrlHelperService } from "angular-oauth2-oidc";
 import { GithubAuthInjector } from "../services/github-auth-injector.service";
-import { LocalStorageService } from "angular-2-local-storage";
+import { LocalStorageService } from "ngx-store";
 import { LocalStorageBrigeInjector } from "../services/local-storage-brige-injector.service";
 
 export function GithubAuthFactory(config: IClientConfig, router: Router, ngZone: NgZone, httpClient: HttpClient, storageBrige: StorageBrige, validationHandler: ValidationHandler, urlHelperService: UrlHelperService): GithubAuthService {

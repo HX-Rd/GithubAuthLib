@@ -6,8 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NgZone } from '@angular/core';
 
-import { LocalStorageModule } from 'angular-2-local-storage';
-import { LocalStorageService } from 'angular-2-local-storage';
+import { WebStorageModule } from 'ngx-store';
+import { LocalStorageService } from 'ngx-store';
 
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { ValidationHandler } from 'angular-oauth2-oidc';
@@ -29,13 +29,7 @@ import { CallbackComponent } from './callback/callback.component';
     CommonModule,
     HttpClientModule,
     OAuthModule,
-    LocalStorageModule.withConfig({
-      storageType: 'localStorage',
-      prefix: '',
-      notifyOptions: {
-        setItem: true
-      }
-    })
+    WebStorageModule
   ],
   declarations: [
     LoginComponent,
@@ -75,7 +69,8 @@ export class GithubAuthLibModule {
             HttpClient,
             StorageBrige,
             ValidationHandler,
-            UrlHelperService
+            UrlHelperService,
+            LocalStorageService
           ],
           useFactory: GithubAuthFactory,
           multi: false

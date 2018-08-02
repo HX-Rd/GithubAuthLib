@@ -3,10 +3,7 @@ import { filter, map } from 'rxjs/operators';
 import { Component, OnInit, Inject, OnDestroy, TemplateRef, ContentChild, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { LocalStorageService } from 'angular-2-local-storage';
-
 import { IClientConfig } from '../client-config.interface';
-import { ILocalStorageEvent } from 'angular-2-local-storage/dist/local-storage-events.interface';
 import { GithubAuthService } from '../services/github-auth.service';
 import { LoadingViewService } from '../services/loading-view.service';
 
@@ -26,7 +23,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   @ViewChild('defaultLoading') defaultLoadingContent: TemplateRef<any>;
 
   redirectAfterLogout: string;
-  accessTokenSubject: BehaviorSubject<boolean>;
   loggedInSubscription: Subscription;
 
   activeLoginContent: TemplateRef<any>;
@@ -36,8 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject('CLIENT_CONFIG') config: IClientConfig,
-    private oauthService: GithubAuthService,
-    private localStorageService: LocalStorageService,
+    private githubService: GithubAuthService,
     private router: Router,
     private loadingViewService: LoadingViewService
   ) {
@@ -57,26 +52,24 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.loadingViewService.loadingView = this.activeLoadingContent;
 
-    this.accessTokenSubject = new BehaviorSubject<boolean>(this.localStorageService.get('access_token') !== null);
-    this.activeTemplate = this.accessTokenSubject.getValue()
+    this.activeTemplate = this.githubService.isLoggedInSubject().getValue()
         ? this.activeLogoutContent
         : this.activeLoginContent;
-    this.loggedInSubscription = this.localStorageService.setItems$.pipe(
-      filter((e: ILocalStorageEvent) => e.key === 'access_token'),
-      map((e: ILocalStorageEvent) => e.newvalue)
-    ).subscribe(() => {
-      this.activeTemplate = this.activeLogoutContent;
-      return this.accessTokenSubject.next(true)
-    });
+    this.loggedInSubscription = this.githubService.isLoggedInSubject().subscribe(
+      (isLoggedIn: boolean) => {
+        this.activeTemplate = isLoggedIn
+          ? this.activeLogoutContent
+          : this.activeLoginContent;
+      }
+    )
   }
 
   ngOnDestroy(): void {
-    this.accessTokenSubject.unsubscribe();
     this.loggedInSubscription.unsubscribe();
   }
 
   handleClick(event) {
-    if(this.accessTokenSubject.getValue()) {
+    if(this.githubService.isLoggedInSubject().getValue()) {
       this.logout();
     }
     else {
@@ -85,13 +78,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.oauthService.startImplicitFlow();
+    this.githubService.startImplicitFlow();
   }
 
   logout() {
-    this.oauthService.logOut();
-    this.activeTemplate = this.activeLoginContent;
-    this.accessTokenSubject.next(false);
+    this.githubService.logOut();
     if (this.redirectAfterLogout) {
       this.router.navigate([this.redirectAfterLogout]);
     }

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { StorageBrige } from "./storage-bridge.service";
-import { LocalStorageService } from "angular-2-local-storage";
+import { LocalStorageService } from "ngx-store";
 
 @Injectable()
 export class LocalStorageBrigeInjector {

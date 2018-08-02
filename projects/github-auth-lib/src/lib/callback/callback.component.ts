@@ -3,10 +3,11 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { LocalStorageService } from 'angular-2-local-storage';
 import { User } from '../models/user.model';
 import { IClientConfig } from '../client-config.interface';
 import { LoadingViewService } from '../services/loading-view.service';
+import { GithubAuthService } from '../services/github-auth.service';
+import { LocalStorageService } from 'ngx-store';
 
 @Component({
   selector: 'ga-callback',
@@ -24,9 +25,10 @@ export class CallbackComponent implements OnInit, AfterViewInit {
     @Inject('CLIENT_CONFIG') config: IClientConfig,
     private httpClient: HttpClient,
     private activatedRoute: ActivatedRoute,
-    private localStorageService: LocalStorageService,
     private router: Router,
-    private loadingViewService: LoadingViewService
+    private loadingViewService: LoadingViewService,
+    private githubAuthService: GithubAuthService,
+    private localStorageService: LocalStorageService
   ) {
     this.redirectAfterLogin = (config.redirectAfterLogin === undefined) ? '/' : config.redirectAfterLogin;
     this.codeRedirectUrl = config.codeRedirectUrl;
