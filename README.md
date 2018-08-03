@@ -28,13 +28,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
-
 import { AppComponent } from './app.component';
-import { SuccessComponent } from './success/success.component';
 
 import { GithubAuthLibModule } from 'github-auth-lib';
-import { GithubAuthService } from 'github-auth-lib';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { SuccessComponent } from './success/success.component';
 
 @NgModule({
   declarations: [
@@ -51,13 +48,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
       redirectAfterLogout: '/'
     })
   ],
-  // This is needed because of some AOT issues
-  providers: [
-    {
-      provide: GithubAuthService, 
-      useExisting: OAuthService
-    },
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
