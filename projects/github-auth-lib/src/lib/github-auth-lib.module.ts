@@ -52,7 +52,7 @@ export class GithubAuthLibModule {
         { provide: ValidationHandler, useClass: JwksValidationHandler },
         LocalStorageService,
         UrlHelperService,
-        StorageBrige, {
+        {
           provide: StorageBrige,
           deps: [
             LocalStorageService
