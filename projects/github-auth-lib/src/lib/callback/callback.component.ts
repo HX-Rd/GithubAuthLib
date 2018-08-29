@@ -12,8 +12,7 @@ import { LocalStorageService } from 'ngx-store';
 @Component({
   selector: 'ga-callback',
   templateUrl: './callback.component.html',
-  styleUrls: ['./callback.component.css'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./callback.component.css']
 })
 export class CallbackComponent implements OnInit, AfterViewInit {
   redirectAfterLogin: string;

@@ -14,7 +14,7 @@ export class GithubAuthInjector {
 
     public static getInstance(config: IClientConfig, router: Router, ngZone: NgZone, httpClient: HttpClient, storageBrige: StorageBrige, validationHandler: ValidationHandler, urlHelperService: UrlHelperService): GithubAuthService {
         if (GithubAuthInjector.instance === null) {
-            router.config.push(
+            router.config.unshift(
                 {
                     path: config.redirectUrl.split('/').pop(),
                     component: CallbackComponent

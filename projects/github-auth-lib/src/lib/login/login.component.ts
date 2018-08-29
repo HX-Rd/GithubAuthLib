@@ -12,8 +12,7 @@ import { LoadingViewService } from '../services/loading-view.service';
   templateUrl: './login.component.html',
   host: {
     '(click)': "handleClick($event)"
-  },
-  encapsulation: ViewEncapsulation.None
+  }
 })
 export class LoginComponent implements OnInit, OnDestroy {
   @ContentChild('login') loginContent: TemplateRef<any>;
