@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Inject, TemplateRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Inject, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map, switchMap, mergeMap, tap } from 'rxjs/operators';
@@ -12,7 +12,8 @@ import { LocalStorageService } from 'ngx-store';
 @Component({
   selector: 'ga-callback',
   templateUrl: './callback.component.html',
-  styleUrls: ['./callback.component.css']
+  styleUrls: ['./callback.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CallbackComponent implements OnInit, AfterViewInit {
   redirectAfterLogin: string;

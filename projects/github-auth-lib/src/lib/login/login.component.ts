@@ -1,6 +1,6 @@
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { Component, OnInit, Inject, OnDestroy, TemplateRef, ContentChild, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, TemplateRef, ContentChild, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { IClientConfig } from '../client-config.interface';
@@ -12,7 +12,8 @@ import { LoadingViewService } from '../services/loading-view.service';
   templateUrl: './login.component.html',
   host: {
     '(click)': "handleClick($event)"
-  }
+  },
+  encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent implements OnInit, OnDestroy {
   @ContentChild('login') loginContent: TemplateRef<any>;
