@@ -18,10 +18,10 @@
     ],
     "paths": {
       "github-auth-lib": [
-        "projects/github-auth-lib/src/public_api"
+        "dist/github-auth-lib"
       ],
       "github-auth-lib/*": [
-        "projects/github-auth-lib/src/public_api/*"
+        "dist/github-auth-lib/*"
       ]
     }
   }

@@ -1,9 +1,6 @@
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { Component, OnInit, Inject, OnDestroy, TemplateRef, ContentChild, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, TemplateRef, ContentChild, ViewChild } from '@angular/core';
 
-import { IClientConfig } from '../client-config.interface';
 import { GithubAuthService } from '../services/github-auth.service';
 import { LoadingViewService } from '../services/loading-view.service';
 
@@ -31,12 +28,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   activeTemplate: TemplateRef<any>;
 
   constructor(
-    @Inject('CLIENT_CONFIG') config: IClientConfig,
     private githubService: GithubAuthService,
-    private router: Router,
     private loadingViewService: LoadingViewService
   ) {
-    this.redirectAfterLogout = config.redirectAfterLogout;
   }
 
   ngOnInit(): void {
@@ -52,10 +46,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.loadingViewService.loadingView = this.activeLoadingContent;
 
-    this.activeTemplate = this.githubService.isLoggedInSubject().getValue()
+    this.activeTemplate = this.githubService.isLoggedInSubject.getValue()
         ? this.activeLogoutContent
         : this.activeLoginContent;
-    this.loggedInSubscription = this.githubService.isLoggedInSubject().subscribe(
+    this.loggedInSubscription = this.githubService.isLoggedInSubject.subscribe(
       (isLoggedIn: boolean) => {
         this.activeTemplate = isLoggedIn
           ? this.activeLogoutContent
@@ -69,7 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   handleClick(event) {
-    if(this.githubService.isLoggedInSubject().getValue()) {
+    if(this.githubService.isLoggedInSubject.getValue()) {
       this.logout();
     }
     else {
@@ -78,13 +72,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.githubService.startImplicitFlow();
+    this.githubService.login();
   }
 
   logout() {
     this.githubService.logOut();
-    if (this.redirectAfterLogout) {
-      this.router.navigate([this.redirectAfterLogout]);
-    }
   }
+
 }

@@ -21,7 +21,7 @@ import { SuccessComponent } from './success/success.component';
       redirectAfterLogin: '/success',
       redirectAfterLogout: '/',
       codeRedirectUrl: '',
-      scopes: "repo"
+      scopes: ['user', 'repo']
     }),
   ],
   providers: [],

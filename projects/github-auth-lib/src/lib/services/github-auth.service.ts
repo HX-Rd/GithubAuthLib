@@ -1,58 +1,70 @@
-import { Injectable, NgZone } from '@angular/core';
-import { OAuthService, ValidationHandler, UrlHelperService } from 'angular-oauth2-oidc';
-import { HttpClient } from '@angular/common/http';
-import { AuthConfig } from 'angular-oauth2-oidc';
+import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
-import { StorageBrige } from './storage-bridge.service';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 import { LocalStorageService, NgxStorageEvent } from 'ngx-store';
+import { IClientConfig } from '../client-config.interface';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class GithubAuthService {
-  private oauthService: OAuthService;
-  private isLoggedInSub = new BehaviorSubject<boolean>(this.storageBrige.getItem('access_token') !== null);
+  public isLoggedInSubject = new BehaviorSubject<boolean>(this.storage.get('access_token') !== null);
+  public accessTokenSubject = new BehaviorSubject<string>(this.storage.get('access_token'));
+  public userInfoSubject = new BehaviorSubject<User>( this.storage.get('github_user_info') === null ? null : JSON.parse(this.storage.get('github_user_info')));
   constructor(
-    private ngZone: NgZone,
-    private httpClient: HttpClient,
-    private storageBrige: StorageBrige,
-    private validationHandler: ValidationHandler,
-    private authConfig: AuthConfig,
-    private urlHelperService: UrlHelperService
+    private config: IClientConfig,
+    private router: Router,
+    private storage: LocalStorageService,
   ) {
-    this.oauthService = new OAuthService(ngZone, httpClient, storageBrige, validationHandler, authConfig, urlHelperService);
-    this.storageBrige.localStorageService.observe('access_token').pipe(
+    this.storage.observe('access_token').pipe(
     ).subscribe(
       (event: NgxStorageEvent) => {
-        this.isLoggedInSub.next(true)
+        this.isLoggedInSubject.next(true)
+        this.accessTokenSubject.next(event.newValue as string);
       }
     );
+    this.storage.observe('github_user_info').subscribe(
+      (event: NgxStorageEvent) => {
+        this.userInfoSubject.next(JSON.parse(event.newValue) as User);
+      }
+    )
   }
 
-  startImplicitFlow() {
-    this.oauthService.initImplicitFlow();
+  login() {
+    let url = `https://github.com/login/oauth/authorize`
+      + `?response_type=id_token%20token`
+      + `&client_id=${this.config.clientId}`
+      + `&state=${this.generateRandomString(40)}`
+      + `&redirect_uri=${this.config.redirectUrl}`
+      + `&scope=${this.config.scopes.join('%20')}`
+      + `&nonce=${this.generateRandomString(40)}`;
+    window.open(url, '_self');
   }
 
   logOut() {
-    this.oauthService.logOut();
-    this.isLoggedInSub.next(false);
-    this.storageBrige.removeItem('github_user_info');
-  }
-
-  getAccessToken(): string {
-    let tokenRaw = this.oauthService.getAccessToken();
-    if(tokenRaw !== undefined) {
-      let token = tokenRaw.replace(/\"/g, '');
-      return token;
+    this.isLoggedInSubject.next(false);
+    this.accessTokenSubject.next(null);
+    this.userInfoSubject.next(null);
+    this.storage.remove('github_user_info');
+    this.storage.remove('access_token');
+    if (this.config.redirectAfterLogout) {
+      this.router.navigate([this.config.redirectAfterLogout]);
     }
   }
 
-  getUserInfo(): User {
-    return JSON.parse(this.storageBrige.getItem('github_user_info'));
+  isLoggedIn(): boolean {
+    return this.storage.get('access_token') !== null
   }
 
-  isLoggedInSubject(): BehaviorSubject<boolean> {
-    return this.isLoggedInSub;
+  getAccessToken(): string {
+    return this.storage.get('access_token');
+  }
+
+  getUserInfo(): User {
+    return JSON.parse(this.storage.get('github_user_info'));
+  }
+
+  private generateRandomString(length: number) : string {
+    return Array.from(Array(length).keys()).map(() => { return (~~(Math.random()*36)).toString(36) }).join('');
   }
 }
 

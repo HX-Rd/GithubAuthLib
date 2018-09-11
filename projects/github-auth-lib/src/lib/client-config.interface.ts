@@ -4,5 +4,5 @@ export interface IClientConfig{
     codeRedirectUrl: string;
     redirectAfterLogin?: string;
     redirectAfterLogout?: string;
-    scopes?: string;
+    scopes?: string[];
 }
