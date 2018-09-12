@@ -30,11 +30,18 @@ export class GithubAuthService {
   }
 
   login() {
+    let scopes = '';
+    if (!this.config.scopes) {
+      scopes = 'user'
+    }
+    else {
+      scopes = this.config.scopes.join('%20');
+    }
     let url = `https://github.com/login/oauth/authorize`
       + `?client_id=${this.config.clientId}`
       + `&state=${this.generateRandomString(40)}`
       + `&redirect_uri=${this.config.redirectUrl}`
-      + `&scope=${this.config.scopes.join('%20')}`
+      + `&scope=${scopes}`
     window.open(url, '_self');
   }
 
