@@ -14,10 +14,9 @@ The library provides one module `GithubAuthLibModule`, that includes on componen
 The login compenent's selector is an attribute selector and is `[ga-login]`
 
 ## Dependencies
-The library has two peer dependencies that you have to install, `"ngx-store": "^2.0.0"` and `"angular-oauth2-oidc": "^4.0.2"`, to install them simply run these commands at the root of your angular repo.   
+The library has two peer dependencies that you have to install, `"ngx-store": "^2.0.0"`, to install them simply run these commands at the root of your angular repo.   
    
 `npm install ngx-store`   
-`npm install angular-oauth2-oidc`   
    
 You should also setup `AppRoutingModule` in your root module since the library uses routing.
 
