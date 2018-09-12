@@ -119,7 +119,10 @@ And that is really all you need, but you can provide your own templates if you w
             <a>Log Me In</a>
           </ng-template>
           <ng-template #logout>
-            <a>Log Me Out</a>
+            <!-- In the component the GithubAuthService is called githubAuth here in this example -->
+            <ng-container *ngIf="githubAuth.userInfoSubject | async; let user">
+              <a>Logout {{user.login}}<span><img [src]="user.avatar_url" height="36" width="36"></span></a>
+            </ng-container>
           </ng-template>
           <ng-template #loading><div class="loading">Loading...</div></ng-template>
         </li>
@@ -136,13 +139,67 @@ The default templates are just a link with login and logout as text, and nothing
 Get the access token for the logged in user
 #### getUserInfo(): User
 Gets the user info for the logged in user. The endpoint that is called to get that information is [UserInfoEndpoint](https://api.github.com/user) and you can read more about it here [Github Users Documentation](https://developer.github.com/v3/users/)
-#### isLoggedInSubject(): BehaviorSubject<boolean>
+#### isLoggedInSubject: BehaviorSubject<boolean>
 You can subscribe to this BehaviorSubject to be notified when a user is logged in
+#### accessTokenSubject: BehaviorSubject<string>
+You can subscribe to this BehaviorSubject to get the access token when it arrives
+#### userInfoSubject: BehaviorSubject<User>
+You can subscribe to this BehaviorSubject to get the user info when it arrives. See the User object here below
 #### logOut()
 Logout, you can log the user out programmatically if that is what is needed, but the loggin component uses this when a user wants to log out.
-#### startImplicitFlow() 
+#### login() 
 Starts the login process, used in the login component.
 
+#### User
+```typescript
+export interface User {
+  login?:                     string;
+  id?:                        number;
+  node_id?:                   string;
+  avatar_url?:                string;
+  gravatar_id?:               string;
+  url?:                       string;
+  html_url?:                  string;
+  followers_url?:             string;
+  following_url?:             string;
+  gists_url?:                 string;
+  starred_url?:               string;
+  subscriptions_url?:         string;
+  organizations_url?:         string;
+  repos_url?:                 string;
+  events_url?:                string;
+  received_events_url?:       string;
+  type?:                      string;
+  site_admin?:                boolean;
+  name?:                      string;
+  company?:                   string;
+  blog?:                      string;
+  location?:                  string;
+  email?:                     string;
+  hireable?:                  boolean;
+  bio?:                       string;
+  public_repos?:              number;
+  public_gists?:              number;
+  followers?:                 number;
+  following?:                 number;
+  created_at?:                string;
+  updated_at?:                string;
+  total_private_repos?:       number;
+  owned_private_repos?:       number;
+  private_gists?:             number;
+  disk_usage?:                number;
+  collaborators?:             number;
+  two_factor_authentication?: boolean;
+  plan?:                      Plan;
+}
+
+export interface Plan {
+  name?:          string;
+  space?:         number;
+  private_repos?: number;
+  collaborators?: number;
+}
+```
 
 ## Notes
 One thing to note, the github access tokens do not expire.
