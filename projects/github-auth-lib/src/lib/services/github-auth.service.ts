@@ -31,12 +31,10 @@ export class GithubAuthService {
 
   login() {
     let url = `https://github.com/login/oauth/authorize`
-      + `?response_type=id_token%20token`
-      + `&client_id=${this.config.clientId}`
+      + `?client_id=${this.config.clientId}`
       + `&state=${this.generateRandomString(40)}`
       + `&redirect_uri=${this.config.redirectUrl}`
       + `&scope=${this.config.scopes.join('%20')}`
-      + `&nonce=${this.generateRandomString(40)}`;
     window.open(url, '_self');
   }
 
