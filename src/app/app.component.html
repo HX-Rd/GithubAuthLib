@@ -12,8 +12,9 @@
             <a>Login</a>
           </ng-template>
           <ng-template #logout>
-            <a>Logout</a>
-            <!--<a>Logout {{githubAuth.getUserInfo()?.login}}<span><img [src]="githubAuth.getUserInfo()?.avatar_url" height="36" width="36"></span></a>-->
+            <ng-container *ngIf="githubAuth.userInfoSubject | async; let user">
+              <a>Logout {{user.login}}<span><img [src]="user.avatar_url" height="36" width="36"></span></a>
+            </ng-container>
           </ng-template>
           <ng-template #loading><div class="loading">Loading...</div></ng-template>
         </li>

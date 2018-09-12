@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { User } from '../models/user.model';
 import { BehaviorSubject } from 'rxjs';
 import { LocalStorageService, NgxStorageEvent } from 'ngx-store';
@@ -11,7 +11,7 @@ export class GithubAuthService {
   public accessTokenSubject = new BehaviorSubject<string>(this.storage.get('access_token'));
   public userInfoSubject = new BehaviorSubject<User>( this.storage.get('github_user_info') === null ? null : JSON.parse(this.storage.get('github_user_info')));
   constructor(
-    private config: IClientConfig,
+    @Inject('CLIENT_CONFIG') private config: IClientConfig,
     private router: Router,
     private storage: LocalStorageService,
   ) {
